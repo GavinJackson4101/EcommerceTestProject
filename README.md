@@ -6,5 +6,5 @@ more.
 This project helps to demonstrate some of talents through many uses of logic like in the TicTacToe game or the understanding of the entire front end
 through the styling and creation of the app. 
 
-REMINDER- This is just a test projec that I have created on my free time, it is not final product or fully demonstrates all of my abilities to 
+REMINDER- This is just a test project that I have created on my free time, it is not final product or fully demonstrates all of my abilities to 
 the full potential. 
