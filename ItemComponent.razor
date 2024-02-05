@@ -1,0 +1,201 @@
+﻿@using Test1.Models
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject ProtectedSessionStorage ProtectedSessionStorage
+
+
+<style>
+    .center-container {
+        display: flex;
+        justify-content: center; /* Horizontal centering */
+        align-items: center; /* Vertical centering */
+    }
+</style>
+
+<style>
+    .custom-dropdown {
+        width: 300px; /* Set the desired width here */
+    }
+</style>
+
+
+
+<TelerikCard Width="300px">
+    <CardHeader>
+        <CardTitle>@ItemName</CardTitle>
+    </CardHeader>
+    <CardImage Src="@ImagePath"></CardImage>
+    <CardBody>
+        <CardTitle>@CardTitle</CardTitle>
+        <CardTitle>@ItemPrice</CardTitle>
+        <CardSubTitle>@CardSubTitle</CardSubTitle>
+        <CardSeparator></CardSeparator>
+        <p>
+            @CardDescription
+        </p>
+    </CardBody>
+    <CardActions Layout="@CardActionsLayout.Stretch">
+        <TelerikButton Class="k-flat" Icon="@FontIcon.HeartOutline" Title="Save"></TelerikButton>
+         <div class="custom-dropdown">
+        <TelerikDropDownList Data="@myDdlData" TextField="MyTextField" ValueField="MyValueField" @bind-Value="selectedValue"></TelerikDropDownList>
+        </div>
+        <TelerikButton Class="k-flat" Icon="@SvgIcon.Cart" Title="Add Item Cart" OnClick="AddToCartButton"></TelerikButton>
+    </CardActions>
+    <CardFooter>
+        <span style="float:right">@CardFooter</span>
+    </CardFooter>
+</TelerikCard>
+
+@if (LoadAddToCartWindow)
+{
+    <TelerikWindow Modal=true
+    @bind-Visible="LoadAddToCartWindow"
+                   CloseOnOverlayClick="false"
+                   Width="550px"
+                   Resizable="false"
+                   Height="50%">
+        <WindowTitle>
+            (@selectedValue) @ItemName added to cart.
+        </WindowTitle>
+        <WindowContent>
+                <div class="center-container">
+                    <div>
+                        <img src="@ImagePath" />
+                    </div>
+                    <br />
+                    <div>
+                        @ItemName - @ItemPrice @CardDescription
+                        <br />
+                        <br />
+                    <TelerikButton Class="k-flat" Title="Checkout" OnClick="CheckoutButton">Checkout</TelerikButton>
+                    <br />
+                    <TelerikButton Class="k-flat" Title="Continue Shopping" OnClick="ContinueShopping">Continue Shopping</TelerikButton>
+
+                    </div>
+            </div>
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+    </TelerikWindow>
+}
+
+@if (LoadCheckoutWindow)
+{
+    <TelerikWindow Modal=true
+    @bind-Visible="LoadCheckoutWindow"
+                   CloseOnOverlayClick="false"
+                   Width="900px"
+                   Resizable="false"
+                   Height="60%">
+        <WindowTitle>
+            Checkout
+        </WindowTitle>
+        <WindowContent>
+            @if (Item.Count > 0)
+            {
+                @foreach (Item line in Item)
+                {
+                    <div>
+                        <img src="@line.Picture">
+                        Item: @line.Name
+                        Price: $@line.Price
+                        Qty: @line.Qty
+                    </div>
+                }
+                @* <div class="center-container">
+        </div> *@
+            }
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+    </TelerikWindow>
+}
+
+@code {
+
+    bool LoadAddToCartWindow { get; set; } = false;
+    bool LoadCheckoutWindow { get; set; } = false;
+
+
+
+
+    [Parameter]
+    public string? ItemName { get; set; }
+    [Parameter]
+    public string? ImagePath { get; set; }
+    [Parameter]
+    public string? ItemPrice { get; set; }
+    [Parameter]
+    public string? CardTitle { get; set; }
+    [Parameter]
+    public string? CardSubTitle { get; set; }
+    [Parameter]
+    public string? CardFooter { get; set; }
+    [Parameter]
+    public string? CardDescription { get; set; }
+
+    public static List<Item>? Item { get; set; } = new List<Item>();
+
+    public string LocalStorageKey { get; set; } = "CartStorage";
+
+    int selectedValue { get; set; } = 1;
+
+    IEnumerable<MyDdlModel> myDdlData = Enumerable.Range(1, 20).Select(x => new MyDdlModel { MyTextField = "Quantity: " + x, MyValueField = x });
+
+    private ProtectedBrowserStorage _protectedBrowserStorage;
+
+
+    // protected async override Task OnInitializedAsync()
+    // {
+    //     item = new Item();
+    // }
+
+    public async Task AddToCartButton()
+    {
+        _protectedBrowserStorage = ProtectedSessionStorage;
+        //Item = new List<Item>();
+        string priceWithoutDollarSign = ItemPrice.Trim('$');
+        decimal priceHolder = Convert.ToDecimal(priceWithoutDollarSign);
+        Item.Add(new Item
+            {
+
+                Id = "Gavin",
+                Name = CardTitle,
+                Price = priceHolder,
+                Sizes = new List<string> { "S", "M", "L" },
+                Colors = new List<string> { "Blue", "White", "Black" },
+                Picture = ImagePath,
+                Qty = selectedValue,
+
+            });
+
+        if (Item.Count>0)
+        {
+            StoreLocalStorageKey();
+        }
+        LoadAddToCartWindow = true;
+    }
+
+    public void CheckoutButton()
+    {
+        LoadCheckoutWindow = true;
+    }
+
+    public void ContinueShopping()
+    {
+        LoadAddToCartWindow = false;
+    }
+
+    public class MyDdlModel
+    {
+        public int MyValueField { get; set; }
+        public string MyTextField { get; set; }
+    }
+
+    private async Task StoreLocalStorageKey()
+    {
+        await ProtectedSessionStorage.SetAsync(LocalStorageKey, Item);
+    }
+}

@@ -1,0 +1,654 @@
+﻿@using Telerik.Blazor.Components
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.ComponentModel.DataAnnotations;
+
+
+@inject ProtectedSessionStorage ProtectedSessionStorage
+@inject NavigationManager NavigationManager
+
+@page "/FittnessCalculator"
+@layout EmptyLayout
+
+<style>
+    .header {
+        background-color: black; /* Background color for the header */
+        color: white; /* Text color */
+        height: 120px; /* Smaller header height */
+        display: flex; /* Use flexbox for layout */
+        align-items: center; /* Center items vertically */
+        justify-content: space-between; /* Space items evenly horizontally */
+        padding: 0 20px; /* Padding for the header */
+    }
+
+    /* Title style */
+    .title {
+        font-size: 20px; /* Adjust the font size as needed */
+        font-weight: bold; /* Make the title bold */
+    }
+
+    /* Left div style */
+    .left-div {
+        display: flex; /* Use flexbox for layout */
+        align-items: center; /* Center items vertically */
+    }
+
+    /* Middle divs style */
+    .middle-div {
+        display: flex; /* Use flexbox for layout */
+        align-items: center; /* Center items vertically */
+    }
+
+    /* Middle div items style */
+    .middle-div-item {
+        margin: 0 10px; /* Adjust the margin as needed */
+    }
+
+    /* Right div style */
+    .right-div {
+        display: flex; /* Use flexbox for layout */
+        align-items: center; /* Center items vertically */
+    }
+
+    /* Style for the icons */
+    .signin {
+        font-size: 24px; /* Adjust the icon size as needed */
+        margin-right: 5px; /* Adjust the spacing between icon and text */
+    }
+
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .content {
+        /* Style your page content container, e.g., background, padding, etc. */
+        padding: 20px;
+    }
+
+
+    body {
+        line-height: 1.5;
+        font-family: 'Poppins', sans-serif;
+        background-color: black;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .container {
+        max-width: 1170px;
+        margin: auto;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .footer {
+        background-color: black;
+        padding: 70px 0;
+    }
+
+    .footer-col {
+        width: 25%;
+        padding: 0 15px;
+    }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #ffffff;
+            text-transform: capitalize;
+            margin-bottom: 35px;
+            font-weight: 500;
+            position: relative;
+        }
+
+            .footer-col h4::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -10px;
+                background-color: white;
+                height: 2px;
+                box-sizing: border-box;
+                width: 50px;
+            }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 16px;
+            text-transform: capitalize;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 300;
+            color: #bbbbbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+            .footer-col ul li a:hover {
+                color: #ffffff;
+                padding-left: 8px;
+            }
+
+        .footer-col .social-links a {
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.5s ease;
+        }
+
+            .footer-col .social-links a:hover {
+                color: #24262b;
+                background-color: #ffffff;
+            }
+
+
+
+    /* page styling */
+    body {
+        background: linear-gradient(180deg,black, silver);
+    }
+
+    section {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+        section h1 {
+            font-size: 46px;
+            text-align: center;
+        }
+
+        section p {
+            font-size: 26px;
+            text-align: center;
+        }
+
+    /* hamburger */
+    .checkbox {
+        display: none;
+    }
+
+    .button {
+        position: relative;
+        background-color: white;
+        height: 5rem;
+        width: 5rem;
+        border-radius: 50%;
+        position: fixed;
+        top: 50vh;
+        right: 5vw;
+        z-index: 2000;
+        box-shadow: 0 1rem 3rem black;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .background {
+        height: 4rem;
+        width: 4rem;
+        border-radius: 50%;
+        position: fixed;
+        top: 50.5vh;
+        right: 5.5vw;
+        background-image: radial-gradient(black, silver);
+        z-index: 1000;
+        transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .nav {
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: -60vw;
+        z-index: 1500;
+        opacity: 0;
+        width: 0;
+        transition: all 0.8s;
+    }
+
+    .list {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        list-style: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .item {
+        margin: 1rem;
+        font-size: 36px;
+    }
+
+    .link:link,
+    .link:visited {
+        display: inline-block;
+        font-size: 3rem;
+        font-weight: 300;
+        padding: 1rem 2rem;
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-image: linear-gradient( 120deg, transparent 0%, transparent 50%, white 50% );
+        background-size: 220%;
+        transition: all 0.4s;
+    }
+
+    .link:hover,
+    .link:active {
+        color: white;
+        cursor: pointer;
+    }
+
+    /* functionality */
+    .checkbox:checked ~ .background {
+        transform: scale(80);
+    }
+
+    .checkbox:checked ~ .nav {
+        opacity: 1;
+        width: 100%;
+        right: 0;
+    }
+
+    /*  */
+    /* styling hamb ICON */
+    .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        .icon,
+        .icon::before,
+        .icon::after {
+            width: 3rem;
+            height: 2px;
+            background-color: gray;
+            display: inline-block;
+        }
+
+            .icon::before,
+            .icon::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                transition: all 0.2s;
+            }
+
+            .icon::before {
+                top: -0.8rem;
+            }
+
+            .icon::after {
+                top: 0.8rem;
+            }
+
+    .button:hover icon:before {
+        top: -1rem;
+    }
+
+    .button:hover icon::after {
+        top: 1rem;
+    }
+
+    .checkbox:checked + .button .icon {
+        background-color: transparent;
+    }
+
+        .checkbox:checked + .button .icon::before {
+            top: 0;
+            transform: rotate(135deg);
+        }
+
+        .checkbox:checked + .button .icon::after {
+            top: 0;
+            transform: rotate(-135deg);
+        }
+
+
+    .whitetext {
+        color: white;
+    }
+
+</style>
+
+<!DOCTYPE html>
+<html>
+<body>
+    <div class="header">
+        <div class="title" @onclick="ReturnHome" style="cursor: pointer;">
+            <img src="Images/I-Image.png" style="width: 80px; height: 80px;">
+            Innovative Software Solutions
+        </div>
+        <div class="middle-div">
+            <div class="middle-div-item" style="cursor: pointer" @onclick="btnAboutUs">About Us</div> <!-- Replace with your content -->
+            <div class="middle-div-item" style="cursor: pointer" @onclick="btnContactUs">Contact Us</div> <!-- Replace with your content -->
+            <div class="middle-div-item" style="cursor: pointer">Services</div> <!-- Replace with your content -->
+            <div class="middle-div-item" style="cursor: pointer" @onclick="btnIndustries">Industries</div> <!-- Replace with your content -->
+        </div>
+        <div class="right-div">
+            <div style="cursor: pointer; text-decoration: underline;" @onclick="SignInBtn" class="signin">Sign In</div> <!-- Replace 'Icon2' with your actual icon or content -->
+        </div>
+    </div>
+</body>
+</html>
+
+<div style="align-content:center; margin-left:180px; margin-top: 50px; font-size: 25px; color:white">
+    <b>Welcome to the ISS Fittness Calculator! We care about your health which is why we offer macros, meals, and more!</b>
+</div>@*
+<div style="align-content:center; margin-left:350px; margin-top: 20px;">
+    <img src="Images/I-Logo2.png" style="width: 1000px; height: 300px;">
+</div> *@
+
+
+<div style="margin-left: 620px; margin-top: 20px; margin-bottom: 50px;">
+<TelerikForm Model="@Entries"
+             OnValidSubmit="@Calculate"
+             Width="300px"
+             Columns="1"
+             Class="whitetext"
+             ColumnSpacing="15%"
+             ValidationMessageType="@FormValidationMessageType.None"
+             Orientation="FormOrientation.Horizontal">
+    <FormValidation>
+        <DataAnnotationsValidator />
+    </FormValidation>
+    <FormItems>
+        <FormGroup LabelText="">
+            <FormItem Field="@nameof(Entries.Goal)">
+                <Template>
+                    <label for="Goal" class="k-label k-form-label, whitetext">Goal</label>
+                    <TelerikDropDownList Width="215px" Id="Goal" Data="@GoalDropDown" @bind-Value="@Entries.Goal"></TelerikDropDownList>
+                    <TelerikValidationTooltip For="@(() => Entries.Goal)" TargetSelector="#Goal" Position="@TooltipPosition.Right" />
+                </Template>
+            </FormItem>
+            <FormItem Field="@nameof(Entries.FirstName)"
+                      EditorType="@FormEditorType.TextBox"
+                      Id="FirstName"
+                      Class="whitetext"
+                      LabelText="First Name">
+            </FormItem>
+            <TelerikValidationTooltip For="@(() => Entries.FirstName)" TargetSelector="#FirstName" Position="@TooltipPosition.Right" />
+            <FormItem Field="@nameof(Entries.LastName)"
+                      EditorType="@FormEditorType.TextBox"
+                      Id="LastName"
+                      Class="whitetext"
+                      LabelText="Last Name">
+            </FormItem>
+            <TelerikValidationTooltip For="@(() => Entries.LastName)" TargetSelector="#LastName" Position="@TooltipPosition.Right" />
+            <FormItem Field="@nameof(Entries.Age)">
+                <Template>
+                    <label Class="whitetext" for="quantity" style="padding-right: 15px; margin-left:45px;">Age</label>
+                    <TelerikNumericTextBox @bind-Value="Entries.Age"
+                                           Id="Age" Width="215px" Min="1"></TelerikNumericTextBox>
+                </Template>
+            </FormItem>
+            <TelerikValidationTooltip For="@(() => Entries.Age)" TargetSelector="#Age" Position="@TooltipPosition.Right" />
+            <FormItem Field="@nameof(Entries.Weight)">
+                <Template>
+                    <label Class="whitetext" for="quantity" style="padding-right: 13px;">Weight(KG)</label>
+                    <TelerikNumericTextBox @bind-Value="Entries.Weight"
+                                           Id="Weight" Width="215px" Min="1"></TelerikNumericTextBox>
+                </Template>
+            </FormItem>
+            <TelerikValidationTooltip For="@(() => Entries.Weight)" TargetSelector="#Weight" Position="@TooltipPosition.Right" />
+            <FormItem Field="@nameof(Entries.Height)">
+                <Template>
+                    <label Class="whitetext" for="quantity" style="padding-right: 13px;">Height(CM)</label>
+                    <TelerikNumericTextBox @bind-Value="Entries.Height"
+                                           Id="Height" Width="215px" Min="1"></TelerikNumericTextBox>
+                </Template>
+            </FormItem>
+            <TelerikValidationTooltip For="@(() => Entries.Height)" TargetSelector="#Height" Position="@TooltipPosition.Right" />
+        </FormGroup>
+    </FormItems>
+    <FormButtons>
+        <TelerikButton Class="darkbluebutton" ButtonType="ButtonType.Submit">Calculate</TelerikButton>
+        <TelerikButton Class="darkbluebutton" ButtonType="ButtonType.Button" OnClick="HandleClearEntries">Clear Entries</TelerikButton>
+    </FormButtons>
+</TelerikForm>
+</div>
+
+@if (calculated)
+{
+    <div style="text-align: center;">
+        <p>Your Total Daily Energy Expenditure (TDEE) is: @tdee calories.</p>
+        @if (Entries.Goal == "Cutting")
+        {
+            <p>To cut, consume @cuttingCalories calories per day.</p>
+        }
+        @if (Entries.Goal == "Bulking")
+        {
+            <p>To bulk, consume @bulkingCalories calories per day.</p>
+        }
+        @if (Entries.Goal == "Maintaining")
+        {
+            <p>To maintain, consume @maintenanceCalories calories per day.</p>
+        }
+    </div>
+}
+
+<!-- hamburger -->
+<input type="checkbox" id="navi-toggle" class="checkbox" />
+<label for="navi-toggle" class="button">
+    <span class="icon">&nbsp;</span>
+</label>
+<div class="background">&nbsp;</div>
+
+<!-- nav -->
+<nav class="nav">
+    <div class="list">
+        <div class="item" @onclick="ReturnHome"> <a class="link"> Home </a> </div>
+        <div class="item" @onclick="btnAboutUs"> <a class="link"> About Us </a> </div>
+        <div class="item" @onclick="btnContactUs"> <a class="link"> Contact Us </a> </div>
+        <div class="item"> <a class="link"> Services </a> </div>
+        <div class="item" @onclick="btnIndustries"> <a class="link"> Industries </a> </div>
+        <div class="item" @onclick="btnTicTacToe"> <a class="link"> Tic-Tac-Toe </a> </div>
+        <div class="item" @onclick="btnTicTacToe"> <a class="link"> Expense Tracker </a> </div>
+        <div class="item" @onclick="btnLoanCalculator"> <a class="link"> Loan Calculator </a> </div>
+    </div>
+</nav>
+
+<br />
+<br />
+<br />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Footer Design</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>company</h4>
+                    <ul>
+                        <li><a href="#">about us</a></li>
+                        <li><a href="#">our services</a></li>
+                        <li><a href="#">privacy policy</a></li>
+                        <li><a href="#">affiliate program</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">shipping</a></li>
+                        <li><a href="#">returns</a></li>
+                        <li><a href="#">order status</a></li>
+                        <li><a href="#">payment options</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>online shop</h4>
+                    <ul>
+                        <li><a href="#">watch</a></li>
+                        <li><a href="#">bag</a></li>
+                        <li><a href="#">shoes</a></li>
+                        <li><a href="#">dress</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+
+@code {
+    Variables Entries { get; set; } = new Variables();
+    private List<string> GoalDropDown { get; set; } = new List<string> { "Bulking", "Cutting", "Maintaining" };
+    public double AdjustedCalories { get; set; }
+
+
+    double tdee;
+    double cuttingCalories;
+    double bulkingCalories;
+    double maintenanceCalories;
+    double cuttingCaloriesRounded;
+    double bulkingCaloriesRounded;
+    double maintenanceCaloriesRounded;
+    bool calculated = false;
+
+    public class Variables
+    {
+        [Required(ErrorMessage = "The Weight is required")]
+        public double Weight { get; set; }
+        [Required(ErrorMessage = "The Height is required")]
+        public double Height { get; set; }
+        [Required(ErrorMessage = "The Age is required")]
+        public int Age { get; set; }
+        [Required(ErrorMessage = "The First Name is required")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "The Last Name is required")]
+        public string LastName { get; set; }
+        [Required(ErrorMessage = "The Goal is required")]
+        public string Goal { get; set; }
+    }
+
+    void Calculate()
+    {
+        tdee = CalculateTDEE(Entries.Weight, Entries.Height, Entries.Age);
+        cuttingCalories = CalculateCalories(tdee, 0.8);
+        bulkingCalories = CalculateCalories(tdee, 1.2);
+        maintenanceCalories = CalculateCalories(tdee, 1.0);
+        // double cuttingCaloriesRounded = Convert.ToDouble(string.Format("{0:F2}", cuttingCalories));
+        // double bulkingCaloriesRounded = Convert.ToDouble(string.Format("{0:F2}", bulkingCalories));
+        // double maintenanceCaloriesRounded = Convert.ToDouble(string.Format("{0:F2}", maintenanceCalories));
+        calculated = true;
+    }
+
+    // Function to calculate TDEE using Harris-Benedict equation
+    double CalculateTDEE(double weight, double height, int age)
+    {
+        // Harris-Benedict Equation (BMR) for men: BMR = 88.362 + (13.397 * weight in kg) + (4.799 * height in cm) - (5.677 * age in years)
+        double bmr = 88.362 + (13.397 * Entries.Weight) + (4.799 * Entries.Height) - (5.677 * Entries.Age);
+
+        // TDEE = BMR * Activity Multiplier (typically 1.2 for sedentary, 1.375 for lightly active, 1.55 for moderately active, etc.)
+        double tdee = bmr * 1.55; // Using a moderate activity level multiplier for demonstration
+
+        return tdee;
+    }
+
+    // Function to adjust calories based on goals (cutting, bulking, maintaining)
+    double CalculateCalories(double tdee, double goalMultiplier)
+    {
+        // Adjust calories based on the goalMultiplier
+        double adjustedCalories = tdee * goalMultiplier;
+
+        return adjustedCalories;
+    }
+
+
+    public void SignInBtn()
+    {
+        NavigationManager.NavigateTo("SignInPage");
+    }
+
+    public void btnContactUs()
+    {
+        NavigationManager.NavigateTo("ContactUs");
+
+    }
+
+    public void btnTicTacToe()
+    {
+        NavigationManager.NavigateTo("TicTacToe");
+
+    }
+    
+    public void btnLoanCalculator()
+    {
+        NavigationManager.NavigateTo("LoanCalculator");
+
+    }
+    public void btnExpenseTracker()
+    {
+        NavigationManager.NavigateTo("ExpenseTracker");
+
+    }
+
+    public void ReturnHome()
+    {
+        NavigationManager.NavigateTo("LandingPage");
+    }
+
+    public void btnAboutUs()
+    {
+        NavigationManager.NavigateTo("AboutUs");
+
+    }
+    public void btnIndustries()
+    {
+        NavigationManager.NavigateTo("Industries");
+    }
+
+    public void HandleClearEntries()
+    {
+        NavigationManager.NavigateTo("FittnessCalculator", true);
+    }
+    public void OnValidSubmitHandler()
+    {
+
+    }
+}

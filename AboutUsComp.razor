@@ -1,0 +1,28 @@
+﻿
+
+
+
+<TelerikCard Width="400px;">
+    <div style="text-align: center;">
+        <CardHeader>
+            <div style="text-align: center;"><b>@Title</b></div>
+        </CardHeader>
+        <CardBody>
+            <div>
+                @BodyText
+            </div>
+            <div style="margin-top: 15px;">
+            <CardImage Width="250px" Height="250px" Src="@Image"></CardImage>
+            </div>
+        </CardBody>
+    </div>
+</TelerikCard>
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+    [Parameter]
+    public string? BodyText { get; set; }
+    [Parameter]
+    public string? Image { get; set; }
+}

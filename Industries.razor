@@ -1,0 +1,243 @@
+﻿@using Telerik.Blazor.Components
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject ProtectedSessionStorage ProtectedSessionStorage
+@inject NavigationManager NavigationManager
+
+@page "/Industries"
+@layout EmptyLayout
+
+<style>
+    body {
+        background: linear-gradient(90deg,black, silver);
+        padding-top: 85px;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-right: 25px;
+        margin-left: 25px;
+        margin-top: 30px;
+    }
+
+    .shoppingcartandcontactus {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 10px;
+    }
+
+    .telerik-card {
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+
+
+    /* hamburger */
+    .checkbox {
+        display: none;
+    }
+
+    .button {
+        position: relative;
+        background-color: white;
+        height: 5rem;
+        width: 5rem;
+        border-radius: 50%;
+        position: fixed;
+        top: 50vh;
+        right: 5vw;
+        z-index: 2000;
+        box-shadow: 0 1rem 3rem black;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .background {
+        height: 4rem;
+        width: 4rem;
+        border-radius: 50%;
+        position: fixed;
+        top: 50.5vh;
+        right: 5.5vw;
+        background-image: radial-gradient(black, silver);
+        z-index: 1000;
+        transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .nav {
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: -60vw;
+        z-index: 1500;
+        opacity: 0;
+        width: 0;
+        transition: all 0.8s;
+    }
+
+    .list {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        list-style: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .item {
+        margin: 1rem;
+        font-size: 36px;
+    }
+
+    .link:link,
+    .link:visited {
+        display: inline-block;
+        font-size: 3rem;
+        font-weight: 300;
+        padding: 1rem 2rem;
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-image: linear-gradient( 120deg, transparent 0%, transparent 50%, white 50% );
+        background-size: 220%;
+        transition: all 0.4s;
+    }
+
+    .link:hover,
+    .link:active {
+        color: white;
+        cursor: pointer;
+    }
+
+    /* functionality */
+    .checkbox:checked ~ .background {
+        transform: scale(80);
+    }
+
+    .checkbox:checked ~ .nav {
+        opacity: 1;
+        width: 100%;
+        right: 0;
+    }
+
+    /*  */
+    /* styling hamb ICON */
+    .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        .icon,
+        .icon::before,
+        .icon::after {
+            width: 3rem;
+            height: 2px;
+            background-color: gray;
+            display: inline-block;
+        }
+
+            .icon::before,
+            .icon::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                transition: all 0.2s;
+            }
+
+            .icon::before {
+                top: -0.8rem;
+            }
+
+            .icon::after {
+                top: 0.8rem;
+            }
+
+    .button:hover icon:before {
+        top: -1rem;
+    }
+
+    .button:hover icon::after {
+        top: 1rem;
+    }
+
+    .checkbox:checked + .button .icon {
+        background-color: transparent;
+    }
+
+        .checkbox:checked + .button .icon::before {
+            top: 0;
+            transform: rotate(135deg);
+        }
+
+        .checkbox:checked + .button .icon::after {
+            top: 0;
+            transform: rotate(-135deg);
+        }
+</style>
+
+<div class="aboutus2" style="color: white; font-size: 30px; margin-left: 770px;">
+    <b>About Us</b>
+</div>
+
+<div class="card-container">
+    <div class="telerik-card">
+        <AboutUsComp Title="Who are we?" BodyText="We possess a versatile skill set in software development, with expertise in C# for backend development and SQL Server Management Studio (SSMS) for database management. I excel in crafting both frontend and backend solutions using technologies such as Blazor, CSS, and HTML. My proficiency extends to working with Visual Studio, where I create and maintain applications with a keen eye for detail. With a strong foundation in database management and a commitment to producing high-quality code, I'm well-prepared to deliver innovative software solutions that meet the evolving demands of the industry and end-users." Image="Images/I-Logo3.png"></AboutUsComp>
+    </div>
+    <div class="telerik-card">
+        <AboutUsComp Title="Our history" BodyText="We possess a versatile skill set in software development, with expertise in C# for backend development and SQL Server Management Studio (SSMS) for database management. I excel in crafting both frontend and backend solutions using technologies such as Blazor, CSS, and HTML. My proficiency extends to working with Visual Studio, where I create and maintain applications with a keen eye for detail. With a strong foundation in database management and a commitment to producing high-quality code, I'm well-prepared to deliver innovative software solutions that meet the evolving demands of the industry and end-users." Image="Images/I-Logo3.png"></AboutUsComp>
+    </div>
+    <div class="telerik-card">
+        <AboutUsComp Title="What makes us special" BodyText="We possess a versatile skill set in software development, with expertise in C# for backend development and SQL Server Management Studio (SSMS) for database management. I excel in crafting both frontend and backend solutions using technologies such as Blazor, CSS, and HTML. My proficiency extends to working with Visual Studio, where I create and maintain applications with a keen eye for detail. With a strong foundation in database management and a commitment to producing high-quality code, I'm well-prepared to deliver innovative software solutions that meet the evolving demands of the industry and end-users." Image="Images/I-Logo3.png"></AboutUsComp>
+    </div>
+</div>
+
+
+<!-- hamburger -->
+<input type="checkbox" id="navi-toggle" class="checkbox" />
+<label for="navi-toggle" class="button">
+    <span class="icon">&nbsp;</span>
+</label>
+<div class="background">&nbsp;</div>
+
+<!-- nav -->
+<nav class="nav">
+    <div class="list">
+        <div class="item" @onclick="ReturnHome"> <a class="link"> Home </a> </div>
+        <div class="item" @onclick="btnAboutUs"> <a class="link"> About Us </a> </div>
+        <div class="item" @onclick="btnContactUs"> <a class="link"> Contact Us </a> </div>
+        <div class="item"> <a class="link"> Services </a> </div>
+        <div class="item" @onclick="btnIndustries"> <a class="link"> Industries </a> </div>
+    </div>
+</nav>
+
+@code {
+    public void btnContactUs()
+    {
+        NavigationManager.NavigateTo("ContactUs");
+
+    }
+
+    public void ReturnHome()
+    {
+        NavigationManager.NavigateTo("LandingPage");
+    }
+
+    public void btnAboutUs()
+    {
+        NavigationManager.NavigateTo("AboutUs");
+
+    }
+    public void btnIndustries()
+    {
+        NavigationManager.NavigateTo("Industries");
+    }
+}
