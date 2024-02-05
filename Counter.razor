@@ -1,0 +1,20 @@
+﻿@using Telerik.Blazor.Components
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject ProtectedSessionStorage ProtectedSessionStorage
+@inject NavigationManager NavigationManager
+
+@page "/counter"
+@layout EmptyLayout
+
+<TelerikButton OnClick="ToTestProject">
+    Click me to go to test project
+</TelerikButton>
+
+@code {
+
+    public void ToTestProject()
+    {
+        NavigationManager.NavigateTo("LandingPage");
+    }
+}

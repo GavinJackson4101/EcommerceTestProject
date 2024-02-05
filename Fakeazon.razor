@@ -1,0 +1,130 @@
+﻿@page "/Fakeazon"
+@layout EmptyLayout
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage ProtectedSessionStorage
+
+<style>
+    .center-container {
+        display: flex;
+        justify-content: center; /* Horizontal centering */
+        align-items: center; /* Vertical centering */
+    }
+</style>
+
+<br />
+<div class="center-container">
+    <h3><b>Fakeazon</b></h3>
+</div>
+<br />
+<TelerikToolBar>
+    <ToolBarButton Icon="@FontIcon.Cart" OnClick="@CheckoutButton">Cart</ToolBarButton>
+    <ToolBarButton Icon="@FontIcon.Home" OnClick="@ReturnToHomePage">Return Home</ToolBarButton>
+</TelerikToolBar>
+ <div class="k-card-group">
+
+    <ItemComponent ItemName="Military Boots" CardTitle="Military Boots" ItemPrice="$24.99" CardDescription="A general-issue boot with a medium sole thickness and a few cleats, used for instruction and campaign." CardSubTitle="Sizes: 8, 9, 10, 11, 12..." ImagePath="Images/MilitaryBoots.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Pants" CardTitle="Military Pants" ItemPrice="$24.99" CardDescription="Overt tactical pants, which mimic military uniforms with combat features like deep-set cargo pockets allowed for ample storage and convenient carry." CardSubTitle="Sizes: 30 ,31, 32, 33..." ImagePath="Images/MilitaryPants.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Shirts" CardTitle="Military Shirt" ItemPrice="$24.99" CardDescription="the body of the shirt is made of soft, stretchy fabric while the arms are made with tough, abrasion-resistant materials." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryShirt.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Socks" CardTitle="Military Socks" ItemPrice="$24.99" CardDescription="The socks are black nylon and wool blend, stretch type, calf length with a cushion sole." CardSubTitle="Sizes: Small, Medium, Large" ImagePath="Images/MilitarySocks.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Hats" CardTitle="Military Hats" ItemPrice="$24.99" CardDescription="A campaign hat, a broad-brimmed felt or straw hat, with a high crown, pinched symmetrically at the four corners." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryHat.jpg"></ItemComponent>
+
+</div>
+
+<div class="k-card-group">
+
+    <ItemComponent ItemName="Military Boots" CardTitle="Military Boots" ItemPrice="$24.99" CardDescription="A general-issue boot with a medium sole thickness and a few cleats, used for instruction and campaign." CardSubTitle="Sizes: 8, 9, 10, 11, 12..." ImagePath="Images/MilitaryBoots.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Pants" CardTitle="Military Pants" ItemPrice="$24.99" CardDescription="Overt tactical pants, which mimic military uniforms with combat features like deep-set cargo pockets allowed for ample storage and convenient carry." CardSubTitle="Sizes: 30 ,31, 32, 33..." ImagePath="Images/MilitaryPants.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Shirts" CardTitle="Military Shirt" ItemPrice="$24.99" CardDescription="the body of the shirt is made of soft, stretchy fabric while the arms are made with tough, abrasion-resistant materials." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryShirt.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Socks" CardTitle="Military Socks" ItemPrice="$24.99" CardDescription="The socks are black nylon and wool blend, stretch type, calf length with a cushion sole." CardSubTitle="Sizes: Small, Medium, Large" ImagePath="Images/MilitarySocks.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Hats" CardTitle="Military Hats" ItemPrice="$24.99" CardDescription="A campaign hat, a broad-brimmed felt or straw hat, with a high crown, pinched symmetrically at the four corners." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryHat.jpg"></ItemComponent>
+
+</div>
+
+<div class="k-card-group">
+
+<ItemComponent ItemName="Military Boots" CardTitle="Military Boots" ItemPrice="$24.99" CardDescription="A general-issue boot with a medium sole thickness and a few cleats, used for instruction and campaign." CardSubTitle="Sizes: 8, 9, 10, 11, 12..." ImagePath="Images/MilitaryBoots.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Pants" CardTitle="Military Pants" ItemPrice="$24.99" CardDescription="Overt tactical pants, which mimic military uniforms with combat features like deep-set cargo pockets allowed for ample storage and convenient carry." CardSubTitle="Sizes: 30 ,31, 32, 33..." ImagePath="Images/MilitaryPants.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Shirts" CardTitle="Military Shirt" ItemPrice="$24.99" CardDescription="the body of the shirt is made of soft, stretchy fabric while the arms are made with tough, abrasion-resistant materials." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryShirt.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Socks" CardTitle="Military Socks" ItemPrice="$24.99" CardDescription="The socks are black nylon and wool blend, stretch type, calf length with a cushion sole." CardSubTitle="Sizes: Small, Medium, Large" ImagePath="Images/MilitarySocks.jpg"></ItemComponent>
+    <ItemComponent ItemName="Military Hats" CardTitle="Military Hats" ItemPrice="$24.99" CardDescription="A campaign hat, a broad-brimmed felt or straw hat, with a high crown, pinched symmetrically at the four corners." CardSubTitle="Sizes: Small, Medium, Large..." ImagePath="Images/MilitaryHat.jpg"></ItemComponent>
+
+</div>
+
+<br />
+
+<div class="center-container">
+    <button class="btn btn-primary" @onclick="ReturnToHomePage">Return Home</button>
+</div>
+
+<br />
+
+@if (LoadCheckoutWindow)
+{
+    <TelerikWindow Modal=true
+    @bind-Visible="LoadCheckoutWindow"
+                   CloseOnOverlayClick="false"
+                   Width="900px"
+                   Resizable="false"
+                   Height="60%">
+        <WindowTitle>
+            Checkout 
+        </WindowTitle>
+        <WindowContent>
+            @if(item.Count > 0)
+            {
+                @foreach(Item line in item)
+                {
+                    <div>
+                        <img src="@line.Picture">
+                        Item: @line.Name
+                        Price: $@line.Price
+                        Qty: @line.Qty
+                    </div>
+                }
+                @* <div class="center-container">
+                </div> *@
+            }
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+    </TelerikWindow>
+}
+
+
+
+@code {
+
+    bool LoadCheckoutWindow { get; set; } = false;
+    List<Item> item { get; set; }
+    private ProtectedBrowserStorage _protectedBrowserStorage;
+    public string SessionStorageKey { get; set; } = "CartStorage";
+
+    protected async override Task OnInitializedAsync()
+    {
+        item = new List<Item>();
+    }
+
+    public void ReturnToHomePage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    public void CheckoutButton()
+    {
+        _protectedBrowserStorage = ProtectedSessionStorage;
+        RetrieveLocalStorageKey();
+        LoadCheckoutWindow = true;
+    }
+
+    private async Task RetrieveLocalStorageKey()
+    {
+        var result = await _protectedBrowserStorage.GetAsync<List<Item>>(SessionStorageKey);
+        if (result.Success)
+        {
+            item = result.Value;
+        }
+    }
+}
